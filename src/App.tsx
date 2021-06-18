@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { get, remove } from './services';
+import { create, get, remove } from './services';
 
 interface ITodo {
   title: string;
@@ -16,6 +16,11 @@ function App() {
   async function getItems(): Promise<void> {
     const res = await get(`todos`);
     return setTodos(res.data.data);
+  }
+
+  async function createItem(body: any): Promise<void> {
+    await create(`todos`, body);
+    return getItems();
   }
 
   async function removeItem(id: string): Promise<void> {
