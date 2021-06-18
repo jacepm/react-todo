@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { get } from './services';
+import { get, remove } from './services';
 
 interface ITodo {
   title: string;
@@ -16,6 +16,11 @@ function App() {
   async function getAll(): Promise<void> {
     const res = await get(`todos`);
     return setTodos(res.data.data);
+  }
+
+  async function removeById(id: string): Promise<void> {
+    await remove(`todos/${id}`);
+    return getAll();
   }
 
   useEffect(() => {
@@ -62,7 +67,7 @@ function App() {
                         <button type="button" className="btn btn-sm btn-success mx-2">
                           edit
                         </button>
-                        <button type="button" className="btn btn-sm btn-danger mx-2">
+                        <button type="button" className="btn btn-sm btn-danger mx-2" onClick={(e) => removeById(todo._id)}>
                           delete
                         </button>
                       </td>
