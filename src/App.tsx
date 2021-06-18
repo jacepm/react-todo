@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, FormEvent } from 'react';
 import './App.css';
 import { create, get, remove } from './services';
 
@@ -54,7 +54,11 @@ function App() {
         </div>
         <div className="row my-5">
           <div className="col-12">
-            <table className="table table-dark table-hover">
+            <h4 className="text-center" hidden={todos.length !== 0}>
+              No todo(s) found...
+            </h4>
+
+            <table className="table table-dark table-hover" hidden={todos.length === 0}>
               <thead>
                 <tr>
                   <th scope="col">#</th>
