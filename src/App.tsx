@@ -45,6 +45,10 @@ function App() {
     setBody(todo);
   }
 
+  function toggleComplete(todo: ITodo): void {
+    updateItem(todo);
+  }
+
   useEffect(() => {
     getItems();
   }, []);
@@ -98,12 +102,12 @@ function App() {
                     <tr key="{todo}">
                       <th scope="row">{i + 1}</th>
                       <td>{todo.title}</td>
-                      <td>{!todo.completed ? 'no' : 'yes'}</td>
+                      <td onClick={(e) => toggleComplete({ ...todo, completed: !todo.completed })}>{!todo.completed ? 'no' : 'yes'}</td>
                       <td>
-                        <button type="button" className="btn btn-sm btn-success mx-2" onClick={(e) => editItem(todo)}>
+                        <button type="button" className="btn btn-sm btn-primary me-1" onClick={(e) => editItem(todo)}>
                           edit
                         </button>
-                        <button type="button" className="btn btn-sm btn-danger mx-2" onClick={(e) => removeItem(todo._id)}>
+                        <button type="button" className="btn btn-sm btn-danger ms-1" onClick={(e) => removeItem(todo._id)}>
                           delete
                         </button>
                       </td>
