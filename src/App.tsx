@@ -12,7 +12,7 @@ interface ITodo {
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [body, setBody] = useState({});
+  const [body, setBody] = useState({ title: '', completed: false });
 
   async function getItems(): Promise<void> {
     const res = await get(`todos`);
@@ -38,11 +38,11 @@ function App() {
     e.preventDefault();
     setBody(body);
     !(body as any)._id ? createItem(body) : updateItem(body);
-    return (document as any).getElementById('form').reset();
+    setBody({ title: '', completed: false });
   }
 
-  function editItem(id: string, title: string): void {
-    setBody({ _id: id, title });
+  function editItem(todo: ITodo): void {
+    setBody(todo);
   }
 
   useEffect(() => {
@@ -66,7 +66,7 @@ function App() {
                   className="form-control"
                   placeholder="Todo"
                   name="title"
-                  value={(body as ITodo).title}
+                  value={body.title}
                   required
                   onChange={(e) => setBody({ ...body, title: (e.target as any).value })}
                 />
@@ -100,7 +100,7 @@ function App() {
                       <td>{todo.title}</td>
                       <td>{!todo.completed ? 'no' : 'yes'}</td>
                       <td>
-                        <button type="button" className="btn btn-sm btn-success mx-2" onClick={(e) => editItem(todo._id, todo.title)}>
+                        <button type="button" className="btn btn-sm btn-success mx-2" onClick={(e) => editItem(todo)}>
                           edit
                         </button>
                         <button type="button" className="btn btn-sm btn-danger mx-2" onClick={(e) => removeItem(todo._id)}>
