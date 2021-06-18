@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { get } from './services';
@@ -14,8 +13,13 @@ interface ITodo {
 function App() {
   const [todos, setTodos] = useState([]);
 
+  async function getAll(): Promise<void> {
+    const res = await get(`todos`);
+    return setTodos(res.data.data);
+  }
+
   useEffect(() => {
-    get(`todos`).then((res: AxiosResponse<any>) => setTodos(res.data.data));
+    getAll();
   }, []);
 
   return (
@@ -54,7 +58,14 @@ function App() {
                       <th scope="row">{i + 1}</th>
                       <td>{todo.title}</td>
                       <td>{!todo.completed ? 'no' : 'yes'}</td>
-                      <td></td>
+                      <td>
+                        <button type="button" className="btn btn-sm btn-success mx-2">
+                          edit
+                        </button>
+                        <button type="button" className="btn btn-sm btn-danger mx-2">
+                          delete
+                        </button>
+                      </td>
                     </tr>,
                   ];
                 })}
