@@ -12,6 +12,7 @@ interface ITodo {
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [body, setBody] = useState({});
 
   async function getItems(): Promise<void> {
     const res = await get(`todos`);
@@ -28,6 +29,12 @@ function App() {
     return getItems();
   }
 
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    createItem(body);
+    (document as any).getElementById('form').reset();
+  }
+
   useEffect(() => {
     getItems();
   }, []);
@@ -42,9 +49,16 @@ function App() {
         </div>
         <div className="row my-5">
           <div className="col-12">
-            <form>
+            <form id="form" onSubmit={(e) => onSubmit(e)}>
               <div className="input-group">
-                <input type="text" className="form-control" placeholder="Todo" name="title" required />
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Todo"
+                  name="title"
+                  required
+                  onChange={(e) => setBody({ title: (e.target as any).value })}
+                />
                 <button className="btn btn-outline-success" type="submit">
                   Submit
                 </button>
