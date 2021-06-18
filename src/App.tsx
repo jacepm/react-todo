@@ -13,18 +13,18 @@ interface ITodo {
 function App() {
   const [todos, setTodos] = useState([]);
 
-  async function getAll(): Promise<void> {
+  async function getItems(): Promise<void> {
     const res = await get(`todos`);
     return setTodos(res.data.data);
   }
 
-  async function removeById(id: string): Promise<void> {
+  async function removeItem(id: string): Promise<void> {
     await remove(`todos/${id}`);
-    return getAll();
+    return getItems();
   }
 
   useEffect(() => {
-    getAll();
+    getItems();
   }, []);
 
   return (
@@ -37,12 +37,14 @@ function App() {
         </div>
         <div className="row my-5">
           <div className="col-12">
-            <div className="input-group">
-              <input type="text" className="form-control" placeholder="Todo" />
-              <button className="btn btn-outline-success" type="button">
-                Submit
-              </button>
-            </div>
+            <form>
+              <div className="input-group">
+                <input type="text" className="form-control" placeholder="Todo" name="title" required />
+                <button className="btn btn-outline-success" type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
           </div>
         </div>
         <div className="row my-5">
@@ -67,7 +69,7 @@ function App() {
                         <button type="button" className="btn btn-sm btn-success mx-2">
                           edit
                         </button>
-                        <button type="button" className="btn btn-sm btn-danger mx-2" onClick={(e) => removeById(todo._id)}>
+                        <button type="button" className="btn btn-sm btn-danger mx-2" onClick={(e) => removeItem(todo._id)}>
                           delete
                         </button>
                       </td>
