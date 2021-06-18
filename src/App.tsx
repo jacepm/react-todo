@@ -1,6 +1,6 @@
 import React, { useEffect, useState, FormEvent } from 'react';
 import './App.css';
-import { create, get, remove } from './services';
+import { create, get, remove, update } from './services';
 
 interface ITodo {
   title: string;
@@ -24,15 +24,25 @@ function App() {
     return getItems();
   }
 
+  async function updateItem(body: any): Promise<void> {
+    await update(`todos/${body._id}`, body);
+    return getItems();
+  }
+
   async function removeItem(id: string): Promise<void> {
     await remove(`todos/${id}`);
     return getItems();
   }
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  function onSubmit(e: FormEvent<HTMLFormElement>): void {
     e.preventDefault();
-    createItem(body);
-    (document as any).getElementById('form').reset();
+    setBody(body);
+    !(body as any)._id ? createItem(body) : updateItem(body);
+    return (document as any).getElementById('form').reset();
+  }
+
+  function editItem(id: string, title: string): void {
+    setBody({ _id: id, title });
   }
 
   useEffect(() => {
@@ -56,8 +66,9 @@ function App() {
                   className="form-control"
                   placeholder="Todo"
                   name="title"
+                  value={(body as ITodo).title}
                   required
-                  onChange={(e) => setBody({ title: (e.target as any).value })}
+                  onChange={(e) => setBody({ ...body, title: (e.target as any).value })}
                 />
                 <button className="btn btn-outline-success" type="submit">
                   Submit
@@ -89,7 +100,7 @@ function App() {
                       <td>{todo.title}</td>
                       <td>{!todo.completed ? 'no' : 'yes'}</td>
                       <td>
-                        <button type="button" className="btn btn-sm btn-success mx-2">
+                        <button type="button" className="btn btn-sm btn-success mx-2" onClick={(e) => editItem(todo._id, todo.title)}>
                           edit
                         </button>
                         <button type="button" className="btn btn-sm btn-danger mx-2" onClick={(e) => removeItem(todo._id)}>
